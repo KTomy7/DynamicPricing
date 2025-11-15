@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dynamic Pricing Dashboard</title>
+  <link rel="stylesheet" href="main.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <h1>Dynamic Pricing Dashboard</h1>
+  <button id="simulateBtn">Run Simulation</button>
+
+  <h2>Total Profit: <span id="totalProfit">—</span></h2>
+
+  <div class="charts">
+    <canvas id="priceChart"></canvas>
+    <canvas id="rewardChart"></canvas>
+  </div>
+
+  <table id="stepsTable">
+    <thead>
+      <tr>
+        <th>Step</th>
+        <th>Action</th>
+        <th>New Price</th>
+        <th>Quantity</th>
+        <th>Reward</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script src="script.js"></script>
+</body>
+</html>

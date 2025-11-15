@@ -1,8 +1,7 @@
 from typing import Dict, Any
-import pandas as pd
 import traceback
 
-from app.utils.helper import load_dataset
+from app.utils.helper import load_dataset, clean_and_prepare_data
 from app.core.linucb_model import LinUCB, extract_features, compute_reward
 
 def simulate_dynamic_pricing() -> Dict[str, Any]:
@@ -13,12 +12,11 @@ def simulate_dynamic_pricing() -> Dict[str, Any]:
     """
     try:
         df = load_dataset()
+        product_df = clean_and_prepare_data(df)
 
-        df.dropna(subset=["Price", "Quantity", "InvoiceDate"], inplace=True)
-        df["InvoiceDate"] = pd.to_datetime(df["InvoiceDate"], errors="coerce")
-        df = df[(df["Quantity"] > 0) & (df["Price"] > 0)]
+        if product_df.empty:
+            return {"total_profit": 0, "steps": []}
 
-        product_df = df[df["StockCode"] == df["StockCode"].unique()[0]].head(500)
         actions = [-0.1, 0, 0.1]
         n_arms = len(actions)
         d = 5

@@ -61,7 +61,7 @@ def extract_features(row, recent_demand, stock):
     promo_flag = random.choice([0, 1])
     stock_norm = stock / 100.0
 
-    return np.array([price, demand, month, promo_flag, stock_norm])
+    return np.array([price, demand, month, promo_flag, stock_norm]).reshape(-1, 1)
 
 def compute_reward(price, quantity, price_change, avg_prev_price, alpha=0.1):
     """
@@ -77,4 +77,5 @@ def compute_reward(price, quantity, price_change, avg_prev_price, alpha=0.1):
     profit = price * quantity
     instability_penalty = abs(price - avg_prev_price) * 0.2
     proxy_LTV = profit / 100.0
-    return profit - instability_penalty + alpha * proxy_LTV
+
+    return float(profit - instability_penalty + alpha * proxy_LTV)

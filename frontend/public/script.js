@@ -1,8 +1,11 @@
-import { fetchSimulate } from "../services/apiService";
+import { fetchSimulate } from "./services/apiService.js";
 
 const btn = document.getElementById("simulateBtn");
 const totalProfitEl = document.getElementById("totalProfit");
 const tableBody = document.querySelector("#stepsTable tbody");
+
+let priceChart = null;
+let rewardChart = null;
 
 btn.addEventListener("click", async () => {
   try {
@@ -62,7 +65,36 @@ function renderCharts(steps) {
         },
       ],
     },
-    options: { responsive: true },
+    options: {
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: "Price Evolution Over Steps",
+          color: "#222",
+          font: { size: 16, weight: "600" },
+          padding: { top: 8, bottom: 8 },
+        },
+      },
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: "Step",
+            color: "#444",
+            font: { size: 12, weight: "600" }
+          }
+        },
+        y: {
+          title: {
+            display: true,
+            text: "Price",
+            color: "#444",
+            font: { size: 12, weight: "600" }
+          }
+        }
+      }
+    },
   });
 
   rewardChart = new Chart(document.getElementById("rewardChart"), {
@@ -79,6 +111,35 @@ function renderCharts(steps) {
         },
       ],
     },
-    options: { responsive: true },
+    options: { 
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: "Reward per Step",
+          color: "#222",
+          font: { size: 16, weight: "600" },
+          padding: { top: 8, bottom: 8 },
+        },
+      }, 
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: "Step",
+            color: "#444",
+            font: { size: 12, weight: "600" }
+          }
+        },
+        y: {
+          title: {
+            display: true,
+            text: "Reward",
+            color: "#444",
+            font: { size: 12, weight: "600" }
+          }
+        }
+      }
+    },
   });
 }

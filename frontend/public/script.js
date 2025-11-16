@@ -1,18 +1,24 @@
-import { fetchSimulate } from "./services/apiService.js";
+import { fetchSimulate, fetchAnalysis } from "./services/apiService.js";
 
-const btn = document.getElementById("simulateBtn");
+const simulateBtn = document.getElementById("simulateBtn");
 const totalProfitEl = document.getElementById("totalProfit");
 const tableBody = document.querySelector("#stepsTable tbody");
+const analyzeBtn = document.getElementById("analyzeBtn");
+const analysisSummaryCard = document.getElementById("analysisSummaryCard");
+const simulationContent = document.getElementById("simulationContent");
 
 let priceChart = null;
 let rewardChart = null;
 
-btn.addEventListener("click", async () => {
+simulateBtn.addEventListener("click", async () => {
   try {
-    btn.disabled = true;
-    btn.textContent = "Loading...";
+    simulateBtn.disabled = true;
+    simulateBtn.textContent = "Loading...";
     
     const data = await fetchSimulate();
+
+    analysisSummaryCard.classList.add("hidden");
+    simulationContent.classList.remove("hidden");
 
     totalProfitEl.textContent = Number(data.total_profit).toFixed(2);
 
@@ -36,8 +42,36 @@ btn.addEventListener("click", async () => {
     console.error("Error fetching simulation data:", error);
     alert("Failed to load simulation data. Check console for details.");
   } finally {
-    btn.disabled = false;
-    btn.textContent = "Run Simulation";
+    simulateBtn.disabled = false;
+    simulateBtn.textContent = "Run Simulation";
+  }
+});
+
+analyzeBtn.addEventListener("click", async () => {
+  try {
+    analyzeBtn.disabled = true;
+    analyzeBtn.textContent = "Analyzing... (this may take a minute)";
+    analysisSummaryCard.style.display = "none";
+
+    const summary = await fetchAnalysis();
+
+    simulationContent.classList.add("hidden");
+    analysisSummaryCard.classList.remove("hidden");
+
+    document.getElementById("avgProfit").textContent = `$${summary.average_profit}`;
+    document.getElementById("avgSteps").textContent = summary.average_steps_taken;
+    document.getElementById("avgIncrease").textContent = summary.average_action_increase;
+    document.getElementById("avgMaintain").textContent = summary.average_action_maintain;
+    document.getElementById("avgDecrease").textContent = summary.average_action_decrease;
+    
+    analysisSummaryCard.style.display = "block";
+
+  } catch (error) {
+    console.error("Error fetching analysis data:", error);
+    alert("Failed to load analysis data. Check console for details.");
+  } finally {
+    analyzeBtn.disabled = false;
+    analyzeBtn.textContent = "Run 100-Run Analysis";
   }
 });
 

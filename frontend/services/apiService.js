@@ -1,11 +1,19 @@
 const Base_URL = "http://127.0.0.1:8000/api/DynamicPricing";
 
-export async function fetchSimulate() {
-    const url = `${Base_URL}/simulate`.replace(/([^:]\/)\/+/g, "$1");
-    const res = await fetch(url, { cache: "no-store" });
-    if (!res.ok) {
-        const txt = await res.text().catch(() => "");
-        throw new Error(`Request failed: ${res.status} ${res.statusText} ${txt}`);
+async function handleFetch(endpoint) {
+    const url = `${Base_URL}/${endpoint}`.replace(/([^:]\/)\/+/g, "$1");
+    const response = await fetch(url, { cache: "no-store" });
+    if (!response.ok) {
+        const txt = await response.text().catch(() => "");
+        throw new Error(`Request failed: ${response.status} ${response.statusText} ${txt}`);
     }
-    return res.json();
+    return response.json();
+}
+
+export async function fetchSimulate() {
+    return handleFetch("simulate");
+}
+
+export async function fetchAnalysis() {
+    return handleFetch("analyze");
 }

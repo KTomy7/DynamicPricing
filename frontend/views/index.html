@@ -10,26 +10,41 @@
 <body>
   <h1>Dynamic Pricing Dashboard</h1>
   <button id="simulateBtn">Run Simulation</button>
+  <button id="analyzeBtn" class="btn btn-secondary">Run 100-Run Analysis</button>
 
-  <h2>Total Profit: <span id="totalProfit">—</span></h2>
+  <div id="simulationContent" class="hidden">
+    <h2>Total Profit: <span id="totalProfit">—</span></h2>
 
-  <div class="charts">
-    <canvas id="priceChart"></canvas>
-    <canvas id="rewardChart"></canvas>
+    <div class="charts">
+      <canvas id="priceChart"></canvas>
+      <canvas id="rewardChart"></canvas>
+    </div>
+
+    <table id="stepsTable">
+      <thead>
+        <tr>
+          <th>Step</th>
+          <th>Action</th>
+          <th>New Price</th>
+          <th>Quantity</th>
+          <th>Reward</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
   </div>
 
-  <table id="stepsTable">
-    <thead>
-      <tr>
-        <th>Step</th>
-        <th>Action</th>
-        <th>New Price</th>
-        <th>Quantity</th>
-        <th>Reward</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+  <div class="card hidden" id="analysisSummaryCard" style="display: none;">
+    <h2>Simulation Analysis (100 Runs)</h2>
+    <div id="analysisSummary">
+        <p><strong>Average Total Profit:</strong> <span id="avgProfit">...</span></p>
+        <p><strong>Average Steps Taken:</strong> <span id="avgSteps">...</span></p>
+        <hr>
+        <p><strong>Avg. 'Increase' Actions:</strong> <span id="avgIncrease">...</span></p>
+        <p><strong>Avg. 'Maintain' Actions:</strong> <span id="avgMaintain">...</span></p>
+        <p><strong>Avg. 'Decrease' Actions:</strong> <span id="avgDecrease">...</span></p>
+    </div>
+  </div>
 
   <script type="module" src="script.js"></script>
 </body>

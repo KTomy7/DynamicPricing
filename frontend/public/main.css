@@ -20,6 +20,10 @@ button:hover {
   background: #0056b3;
 }
 
+.hidden {
+  display: none;
+}
+
 .charts {
   display: flex;
   justify-content: center;

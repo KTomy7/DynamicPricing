@@ -1,7 +1,9 @@
+from collections import Counter
 from typing import Dict, Any
+import pandas as pd
 import traceback
 
-from app.utils.helper import load_dataset, clean_and_prepare_data
+from app.utils.helper import load_dataset, clean_and_prepare_data, save_to_csv
 from app.core.linucb_model import LinUCB, extract_features, compute_reward
 
 def simulate_dynamic_pricing() -> Dict[str, Any]:
@@ -65,3 +67,44 @@ def simulate_dynamic_pricing() -> Dict[str, Any]:
         print("❌ ERROR inside simulate_dynamic_pricing:", e)
         traceback.print_exc()
         raise e  # re-raise so FastAPI shows it
+
+
+def run_and_analyze_simulations(n_runs: int = 100) -> Dict[str, Any]:
+    """
+    Runs the simulation n_runs times and returns a summary.
+    """
+    all_run_data = []
+
+    for i in range(n_runs):
+        sim_results = simulate_dynamic_pricing()
+
+        total_profit = sim_results["total_profit"]
+        steps_taken = len(sim_results["steps"])
+
+        action_counts = Counter([s["action"] for s in sim_results["steps"]])
+
+        all_run_data.append({
+            "run": i + 1,
+            "total_profit": total_profit,
+            "steps_taken": steps_taken,
+            "action_increase_count": action_counts.get(0.1, 0),
+            "action_maintain_count": action_counts.get(0.0, 0),
+            "action_decrease_count": action_counts.get(-0.1, 0)
+        })
+
+    # Convert to DataFrame for easy analysis
+    df = pd.DataFrame(all_run_data)
+
+    # Save the full results to a CSV for your own analysis
+    save_to_csv(df, "dynamic_pricing_simulation_results")
+
+    # Create the summary dictionary to send to the frontend
+    summary = {
+        "total_runs": n_runs,
+        "average_profit": round(df["total_profit"].mean(), 2),
+        "average_steps_taken": round(df["steps_taken"].mean(), 1),
+        "average_action_increase": round(df["action_increase_count"].mean(), 1),
+        "average_action_maintain": round(df["action_maintain_count"].mean(), 1),
+        "average_action_decrease": round(df["action_decrease_count"].mean(), 1),
+    }
+    return summary

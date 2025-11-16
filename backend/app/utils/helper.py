@@ -1,5 +1,7 @@
 import os
 import pandas as pd
+from pathlib import Path
+from datetime import datetime
 
 FILENAME = "online_retail_II.csv"
 
@@ -46,3 +48,24 @@ def clean_and_prepare_data(df: pd.DataFrame) -> pd.DataFrame:
     first_product_code = df["StockCode"].unique()[0]
     product_df = df[df["StockCode"] == first_product_code].head(500)
     return product_df
+
+
+def save_to_csv(df: pd.DataFrame, filename: str, include_timestamp: bool = True) -> Path:
+    """
+    Save DataFrame to CSV in the results directory.
+    :param df: DataFrame to save
+    :param filename: Base filename (without extension)
+    :param include_timestamp: Whether to add timestamp to filename
+    :return: Path where the file was saved
+    """
+    results_dir = Path(__file__).resolve().parent.parent.parent / "results"
+    results_dir.mkdir(parents=True, exist_ok=True)
+
+    if include_timestamp:
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        output_path = results_dir / f"{filename}_{timestamp}.csv"
+    else:
+        output_path = results_dir / f"{filename}.csv"
+
+    df.to_csv(output_path, index=False)
+    return output_path

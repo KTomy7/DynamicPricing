@@ -50,7 +50,7 @@ simulateBtn.addEventListener("click", async () => {
 analyzeBtn.addEventListener("click", async () => {
   try {
     analyzeBtn.disabled = true;
-    analyzeBtn.textContent = "Analyzing... (this may take a minute)";
+    analyzeBtn.textContent = "Analyzing... (this may take a while)";
     analysisSummaryCard.style.display = "none";
 
     const summary = await fetchAnalysis();

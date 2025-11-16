@@ -56,3 +56,48 @@ th {
   background: #007bff;
   color: white;
 }
+
+#analysisSummaryCard {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 25px 30px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#analysisSummaryCard.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#analysisSummaryCard.hidden {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+#analysisSummaryCard h2 {
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #333;
+}
+
+#analysisSummaryCard p {
+    font-size: 1.1rem;
+    margin: 10px 0;
+    color: #444;
+}
+
+#analysisSummaryCard strong {
+    color: #1e4bb8;
+}
+
+#analysisSummaryCard hr {
+    margin: 25px 0;
+    border: 0;
+    height: 1px;
+    background: #e2e2e2;
+}

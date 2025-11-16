@@ -21,8 +21,8 @@ def simulate_dynamic_pricing() -> Dict[str, Any]:
 
         actions = [-0.1, 0, 0.1]
         n_arms = len(actions)
-        d = 5
-        agent = LinUCB(n_arms=n_arms, d=d, alpha=0.3)
+        d = 4
+        agent = LinUCB(n_arms=n_arms, d=d, alpha=1.0)
 
         stock = 100
         avg_prev_price = float(product_df["Price"].iloc[0])
@@ -40,7 +40,18 @@ def simulate_dynamic_pricing() -> Dict[str, Any]:
             arm = agent.select_arm(state)
             price_change = actions[arm]
             new_price = float(row["Price"] * (1 + price_change))
-            simulated_quantity = max(1, int(row["Quantity"] * (1 - price_change)))
+
+            if price_change == 0.1:
+                # A 10% price increase drops quantity by 15%
+                quantity_multiplier = 0.85
+            elif price_change == -0.1:
+                # A 10% price cut only boosts quantity by 8%
+                quantity_multiplier = 1.08
+            else:
+                # No change
+                quantity_multiplier = 1.0
+
+            simulated_quantity = max(1, int(row["Quantity"] * quantity_multiplier))
 
             reward = float(compute_reward(new_price, simulated_quantity, price_change, avg_prev_price))
             avg_prev_price = new_price

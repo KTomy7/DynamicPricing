@@ -58,10 +58,9 @@ def extract_features(row, recent_demand, stock):
     price = row["Price"]
     demand = recent_demand
     month = row["InvoiceDate"].month / 12.0
-    promo_flag = random.choice([0, 1])
     stock_norm = stock / 100.0
 
-    return np.array([price, demand, month, promo_flag, stock_norm]).reshape(-1, 1)
+    return np.array([price, demand, month, stock_norm]).reshape(-1, 1)
 
 def compute_reward(price, quantity, price_change, avg_prev_price, alpha=0.1):
     """
@@ -75,7 +74,14 @@ def compute_reward(price, quantity, price_change, avg_prev_price, alpha=0.1):
     The computed reward.
     """
     profit = price * quantity
-    instability_penalty = abs(price - avg_prev_price) * 0.2
+    instability_penalty = abs(price - avg_prev_price) * 20.0
     proxy_LTV = profit / 100.0
 
-    return float(profit - instability_penalty + alpha * proxy_LTV)
+    stability_bonus = 0.0
+    if price_change == 0.0:
+        # Give a large, fixed bonus for choosing the "Maintain" action.
+        # This represents the value of a stable, happy customer.
+        # Let's try 50.0 to start.
+        stability_bonus = 50.0
+
+    return float(profit - instability_penalty + alpha * proxy_LTV + stability_bonus)

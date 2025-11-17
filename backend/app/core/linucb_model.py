@@ -47,10 +47,12 @@ def compute_reward(price, quantity, price_change, avg_prev_price, alpha=0.1):
     Compute the reward. Let's use a simple, small penalty.
     """
     profit = price * quantity
-
     # We use a simple, small penalty to start
     instability_penalty = abs(price - avg_prev_price) * 0.5
-
     proxy_LTV = profit / 100.0
 
-    return profit - instability_penalty + alpha * proxy_LTV
+    low_price_penalty = 0
+    if price < 2.0:
+        low_price_penalty = 100.0
+
+    return profit - instability_penalty + alpha * proxy_LTV - low_price_penalty

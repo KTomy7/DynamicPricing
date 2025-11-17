@@ -53,7 +53,7 @@ def simulate_dynamic_pricing() -> Dict[str, Any]:
         if price_change == 0.1:
             quantity_multiplier = 0.85
         elif price_change == -0.1:
-            quantity_multiplier = 1.15
+            quantity_multiplier = 1.25
         else:
             quantity_multiplier = 1.0
         simulated_quantity = max(1, int(base_demand_for_product * quantity_multiplier))
